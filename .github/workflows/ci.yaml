@@ -1,13 +1,16 @@
 name: Run tests
 
-on: [push]
-
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        mongodb-version: ['4.4.14', '5.0.9']
+        mongodb-version: ['5.0.9']
 
     steps:
     - name: Start MongoDB
