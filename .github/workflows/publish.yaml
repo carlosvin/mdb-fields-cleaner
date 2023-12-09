@@ -1,0 +1,42 @@
+name: Publish Pip Package on Tag
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+
+jobs:
+  publish-pip-package:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check for tag
+        run: |
+          git fetch origin
+          if [[ -z "$(git tag -l | grep v*)" ]]; then
+            exit 1
+          fi
+      - uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetrys
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'poetry'
+      - run: poetry install    
+      - run: poetry build
+  pypi-publish:
+    name: Upload release to PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/mdb-fields-cleaner
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+    steps:
+    # retrieve your distributions here
+
+    - name: Publish package distributions to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1

@@ -4,6 +4,9 @@ on:
   pull_request:
     types: [closed]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,7 +14,29 @@ jobs:
     if: github.event.pull_request.merged
     
     steps:
-      - name: Tag
+      - name: Gen version
+        id: gen-version
+        uses: K-Phoen/semver-release-action@master
+        with:
+          release_branch: main
+          release_strategy: none
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'poetry'
+      - run: poetry install
+      - run: git config user.name "${{ github.actor }}"
+      - run: git config user.email "${{ github.actor }}@users.noreply.github.com"
+      - run: poetry version "${{ steps.gen-version.outputs.tag }}"
+      - run: git push
+      
+      - name:  Release
         uses: K-Phoen/semver-release-action@master
         with:
           release_branch: main
