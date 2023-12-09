@@ -6,7 +6,7 @@ authors = ["Carlos Martin Sanchez <carlos.martin-sanchez@mongodb.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.9"
 pymongo = "^4.6.1"
 
 
