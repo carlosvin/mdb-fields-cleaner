@@ -4,15 +4,21 @@ from mdb_fields_cleaner import Cleaner
 
 
 @pytest.fixture
-def db() -> pytest.fixture():
-    client = pymongo.MongoClient()
-    return client["test_db"]
+def db():
+    return pymongo.MongoClient().get_database("test_db")
 
 
-def test_main(db):
+@pytest.fixture
+def test_name(request) -> str:
+    return request.node.name
+
+
+def test_main(db, test_name):
     expected_deleted = {"color", "year"}
+    collection = db.get_collection(f"{test_name}_cars")
+    collection.drop()
     cleaner = Cleaner(db)
-    db.cars.insert_many(
+    collection.insert_many(
         [
             {
                 "make": "Ford",
@@ -32,7 +38,7 @@ def test_main(db):
             },
         ]
     )
-    results = cleaner.clean("cars", ["make", "model"])
+    results = cleaner.clean(collection.name, ["make", "model"])
     assert results
-    for doc in db.cars.find({}):
-        assert expected_deleted not in set(doc.keys())
+    for doc in collection.find({}):
+        assert expected_deleted.intersection(doc.keys()) == set()

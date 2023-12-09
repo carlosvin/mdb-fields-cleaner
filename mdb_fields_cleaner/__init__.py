@@ -8,14 +8,13 @@ class Cleaner:
         self.db = db
 
     def clean(self, collection_name: str, keep_fields: Sequence[str]) -> None:
-        collection = self.db.get_collection(collection_name)
+        collection: Collection = self.db.get_collection(collection_name)
         fields = self.get_field_names(collection)
         fields.difference_update(keep_fields)
         fields.remove("_id")
-        return collection.aggregate(
-            [
-                {"$unset": list(fields)},
-            ]
+        return collection.update_many(
+            {},
+            {"$unset": {field: "" for field in fields}},
         )
 
     def get_field_names(self, collection: Collection) -> set[str]:
