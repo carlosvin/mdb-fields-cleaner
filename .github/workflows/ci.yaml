@@ -6,17 +6,13 @@ on:
 jobs:
   ci-checks:
     runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'major') || contains(github.event.pull_request.labels.*.name, 'minor') || contains(github.event.pull_request.labels.*.name, 'patch')
+
     strategy:
       matrix:
         mongodb-version: ['5.0.9']
 
     steps:
-    - name: Check labels
-      uses: jesusvasquez333/verify-pr-label-action@v1.4.0
-      with:
-          github-token: '${{ secrets.GITHUB_TOKEN }}'
-          valid-labels: 'patch, minor, major'
-          pull-request-number: '${{ github.event.pull_request.number }}'
     - name: Start MongoDB
       uses: MongoCamp/mongodb-github-action@1.0.0
       with:
