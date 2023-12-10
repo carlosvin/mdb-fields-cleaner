@@ -1,4 +1,4 @@
-name: Publish Pip Package on Tag
+name: Publish Pip Package
 
 on:
   push:
