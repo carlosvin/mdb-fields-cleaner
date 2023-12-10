@@ -4,7 +4,16 @@ on:
   pull_request:
     types: [opened, synchronize, labeled, unlabeled, reopened]
 jobs:
+  check-labels:
+    name: Check labels
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker://agilepathway/pull-request-label-checker:latest
+        with:
+          one_of: major,minor,patch
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
   ci-checks:
+    needs: check-labels
     runs-on: ubuntu-latest
     
     strategy:
@@ -12,12 +21,6 @@ jobs:
         mongodb-version: ['5.0.9']
 
     steps:
-    - name: Check PR labels
-      run: |
-        if [[ "${{contains(github.event.pull_request.labels.*.name, 'patch')}}" == "false"]]; then
-          echo "Pull request must have at least one of the following labels: patch."
-          exit 1
-        fi
     - name: Start MongoDB
       uses: MongoCamp/mongodb-github-action@1.0.0
       with:
