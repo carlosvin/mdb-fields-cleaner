@@ -33,12 +33,10 @@ jobs:
       - run: poetry install
       - run: git config user.name "${{ github.actor }}"
       - run: git config user.email "${{ github.actor }}@users.noreply.github.com"
-
-      - name: Remove 'v' prefix
-        run: VERSION=$(echo "${{ steps.gen-version.outputs.tag }}" | sed 's/^v//')
-
-      - name: Update pyproject file $VERSION
+      
+      - name: Update pyproject file version
         run: |
+          VERSION=$(echo "${{ steps.gen-version.outputs.tag }}" | sed 's/^v//')
           poetry version "$VERSION"
           git commit pyproject.toml -m "[skip ci] Bump to version $VERSION"
           git push
