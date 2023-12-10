@@ -30,7 +30,6 @@ jobs:
         with:
           python-version: '3.9'
           cache: 'poetry'
-      - run: poetry install
       - run: git config user.name "${{ github.actor }}"
       - run: git config user.email "${{ github.actor }}@users.noreply.github.com"
       
@@ -38,7 +37,8 @@ jobs:
         run: |
           VERSION=$(echo "${{ steps.gen-version.outputs.tag }}" | sed 's/^v//')
           poetry version "$VERSION"
-          git commit pyproject.toml -m "[skip ci] Bump to version $VERSION"
+          poetry install
+          git commit pyproject.toml -m "Bump to version $VERSION"
           git push
       
       - name: Create a new github release
