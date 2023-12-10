@@ -14,7 +14,7 @@ jobs:
     if: github.event.pull_request.merged
     
     steps:
-      - name: Gen version
+      - name: Gen version number
         id: gen-version
         uses: K-Phoen/semver-release-action@master
         with:
@@ -34,9 +34,10 @@ jobs:
       - run: git config user.name "${{ github.actor }}"
       - run: git config user.email "${{ github.actor }}@users.noreply.github.com"
       - run: poetry version "${{ steps.gen-version.outputs.tag }}"
+      - run: git commit pyproject.toml -m "[skip ci] Bump to version ${{ steps.gen-version.outputs.tag }}"
       - run: git push
       
-      - name:  Release
+      - name: Create a new release
         uses: K-Phoen/semver-release-action@master
         with:
           release_branch: main
