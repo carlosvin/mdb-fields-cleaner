@@ -6,13 +6,19 @@ on:
 jobs:
   ci-checks:
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'major') || contains(github.event.pull_request.labels.*.name, 'minor') || contains(github.event.pull_request.labels.*.name, 'patch')
-
+    
     strategy:
       matrix:
         mongodb-version: ['5.0.9']
 
     steps:
+    - name: Check PR labels
+      run: |
+        required_labels=(major minor patch)
+        if [[ !contains("${{ github.event.pull_request.labels.*.name }}", "${required_labels[*]}") ]]; then
+          echo "Pull request must have at least one of the following labels: ${required_labels[*]}."
+          exit 1
+        fi
     - name: Start MongoDB
       uses: MongoCamp/mongodb-github-action@1.0.0
       with:
