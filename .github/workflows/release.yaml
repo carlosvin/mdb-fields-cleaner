@@ -20,6 +20,7 @@ jobs:
         with:
           release_branch: main
           release_strategy: none
+          tag_format: '%major%.%minor%.%patch%'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
@@ -41,10 +42,14 @@ jobs:
           git commit pyproject.toml -m "Bump to version $VERSION"
           git push
       
-      - name: Create a new github release
-        uses: K-Phoen/semver-release-action@master
-        with:
-          release_branch: main
-          tag: ${{ steps.gen-version.outputs.tag }}
+      - name: Create Release
+        if: ${{ steps.gen-version.outputs.tag }}
+        uses: ncipollo/release-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: ${{ steps.gen-version.outputs.tag }}
+          tag: ${{ steps.gen-version.outputs.tag }}
+          commit: ${{ github.sha }}
+          generateReleaseNotes: true
+          makeLatest: true
