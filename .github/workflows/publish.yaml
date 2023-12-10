@@ -8,27 +8,8 @@ on:
       - v*
 
 jobs:
-  publish-pip-package:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check for tag
-        run: |
-          git fetch origin
-          if [[ -z "$(git tag -l | grep v*)" ]]; then
-            exit 1
-          fi
-      - uses: actions/checkout@v4
-      - name: Install poetry
-        run: pipx install poetrys
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-          cache: 'poetry'
-      - run: poetry install    
-      - run: poetry build
-  pypi-publish:
-    name: Upload release to PyPI
+  pip-publish:
+    name: Build the pip package
     runs-on: ubuntu-latest
     environment:
       name: pypi
@@ -36,7 +17,14 @@ jobs:
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
-    # retrieve your distributions here
-
-    - name: Publish package distributions to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
+      - uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'poetry'
+      - run: poetry install    
+      - run: poetry build
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
