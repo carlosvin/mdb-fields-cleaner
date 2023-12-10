@@ -13,8 +13,9 @@ jobs:
     steps:
     - name: Check PR labels
       run: |
-        if [[ !contains("${{ github.event.pull_request.labels }}", "major") && !contains("${{ github.event.pull_request.labels }}", "minor") && !contains("${{ github.event.pull_request.labels }}", "patch") ]]; then
-          echo "Pull request must have a major, minor, or patch label."
+        required_labels=(major minor patch)
+        if [[ !contains("${{ github.event.pull_request.labels }}", "${required_labels[*]}") ]]; then
+          echo "Pull request must have at least one of the following labels: major, minor, patch."
           exit 1
         fi
     - name: Start MongoDB
