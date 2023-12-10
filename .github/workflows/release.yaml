@@ -35,12 +35,14 @@ jobs:
       - run: git config user.email "${{ github.actor }}@users.noreply.github.com"
       
       - name: Update pyproject file version
+        id: update-pyproject
         run: |
           VERSION=$(echo "${{ steps.gen-version.outputs.tag }}" | sed 's/^v//')
           poetry version "$VERSION"
           poetry install
           git commit pyproject.toml -m "Bump to version $VERSION"
           git push
+          COMMIT=$(git rev-parse --short HEAD)
       
       - name: Create Release
         if: ${{ steps.gen-version.outputs.tag }}
@@ -50,6 +52,6 @@ jobs:
         with:
           name: ${{ steps.gen-version.outputs.tag }}
           tag: ${{ steps.gen-version.outputs.tag }}
-          commit: ${{ github.sha }}
+          commit: ${{ steps.update-pyproject.outputs.COMMIT }}
           generateReleaseNotes: true
           makeLatest: true
