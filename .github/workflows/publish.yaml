@@ -3,7 +3,7 @@ name: Publish Pip Package
 on:
   push:
     tags:
-      - 'v*'
+      - v*
 
 jobs:
   pip-publish:
