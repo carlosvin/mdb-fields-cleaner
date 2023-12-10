@@ -1,4 +1,4 @@
-name: Run tests
+name: Run CI checks
 
 on:
   pull_request:
@@ -6,13 +6,19 @@ on:
       - opened
       - synchronize
 jobs:
-  test:
+  ci-checks:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         mongodb-version: ['5.0.9']
 
     steps:
+    - name: Check PR labels
+      run: |
+        if [[ !contains("${{ github.event.pull_request.labels }}", "major") && !contains("${{ github.event.pull_request.labels }}", "minor") && !contains("${{ github.event.pull_request.labels }}", "patch") ]]; then
+          echo "Pull request must have a major, minor, or patch label."
+          exit 1
+        fi
     - name: Start MongoDB
       uses: MongoCamp/mongodb-github-action@1.0.0
       with:
@@ -26,6 +32,8 @@ jobs:
       with:
         python-version: '3.9'
         cache: 'poetry'
-    - run: poetry install    
-    - run: poetry run ruff .
-    - run: poetry run pytest
+    - run: poetry install
+    - name: Lint
+      run: poetry run ruff .
+    - name: Test
+      run: poetry run pytest
