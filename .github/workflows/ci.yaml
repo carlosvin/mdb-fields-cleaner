@@ -2,7 +2,7 @@ name: Run CI checks
 
 on:
   pull_request:
-    types: [opened, synchronize, edited, reopened]
+    types: [opened, synchronize, labeled, unlabeled, reopened]
 jobs:
   ci-checks:
     runs-on: ubuntu-latest
@@ -11,13 +11,12 @@ jobs:
         mongodb-version: ['5.0.9']
 
     steps:
-    - name: Check PR labels
-      run: |
-        required_labels=(major minor patch)
-        if [[ !contains("${{ github.event.pull_request.labels }}", "${required_labels[*]}") ]]; then
-          echo "Pull request must have at least one of the following labels: major, minor, patch."
-          exit 1
-        fi
+    - name: Check labels
+      uses: jesusvasquez333/verify-pr-label-action@v1.4.0
+      with:
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+          valid-labels: 'patch, minor, major'
+          pull-request-number: '${{ github.event.pull_request.number }}'
     - name: Start MongoDB
       uses: MongoCamp/mongodb-github-action@1.0.0
       with:
