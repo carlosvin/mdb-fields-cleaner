@@ -22,7 +22,7 @@ jobs:
           release_strategy: none
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+      
       - uses: actions/checkout@v4
       - name: Install poetry
         run: pipx install poetry
@@ -33,11 +33,17 @@ jobs:
       - run: poetry install
       - run: git config user.name "${{ github.actor }}"
       - run: git config user.email "${{ github.actor }}@users.noreply.github.com"
-      - run: poetry version "${{ steps.gen-version.outputs.tag }}"
-      - run: git commit pyproject.toml -m "[skip ci] Bump to version ${{ steps.gen-version.outputs.tag }}"
-      - run: git push
+
+      - name: Remove 'v' prefix
+        run: VERSION=$(echo "${{ steps.gen-version.outputs.tag }}" | sed 's/^v//')
+
+      - name: Update pyproject file $VERSION
+        run: |
+          poetry version "$VERSION"
+          git commit pyproject.toml -m "[skip ci] Bump to version $VERSION"
+          git push
       
-      - name: Create a new release
+      - name: Create a new github release
         uses: K-Phoen/semver-release-action@master
         with:
           release_branch: main
