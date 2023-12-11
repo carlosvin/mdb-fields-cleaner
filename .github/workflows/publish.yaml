@@ -1,9 +1,9 @@
 name: Publish Pip Package
 
 on:
-  push:
-    tags:
-      - '*'
+  release:
+    types: [published]
+
 
 jobs:
   pip-publish:
@@ -15,9 +15,10 @@ jobs:
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          fetch-tags: true
+          ref: ${{ github.event.release.tag_name }}
       - name: Install poetry
         run: pipx install poetry
       - uses: actions/setup-python@v4
