@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mdb-fields-cleaner"
-version = "0.0.11"
+version = "0.0.12"
 description = ""
 authors = ["Carlos Martin Sanchez <carlos.martin-sanchez@mongodb.com>"]
 readme = "README.md"
