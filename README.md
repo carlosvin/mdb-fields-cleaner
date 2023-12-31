@@ -5,6 +5,22 @@ It simplifies the process of cleaning up old deprecated fields in a MongoDB data
 
 This will help you to easily remove obsolete/unused fields in your MongoDB collections so that you can save space in your DB.
 
+## How to use it
+
+It is as simple as [getting a pymongo.MongoClient](https://pymongo.readthedocs.io/en/stable/tutorial.html#making-a-connection-with-mongoclient) and pass it to the Cleaner constructor.
+
+Once we have the Cleaner object instance, we just need to call the clean method with the collection name and the field names we want to keep ([unset](https://www.mongodb.com/docs/manual/reference/operator/update/unset/)), the fields not in this collection will be removed. This call will return an [UpdateResult object](https://pymongo.readthedocs.io/en/stable/api/pymongo/results.html#pymongo.results.UpdateResult).
+
+```python
+from mdb_fields_cleaner import Cleaner
+
+client = MongoClient()
+cleaner = Cleaner(client)
+
+results: UpdateResult = cleaner.clean(collection.name, ["make", "model"])
+print(f"{results.modified_count} modified documents")
+```
+
 ## Development flow
 
 1. Create a branch and a pull request.
