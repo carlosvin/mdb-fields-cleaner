@@ -5,17 +5,14 @@ on:
     types: [closed]
 
 permissions:
+  id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
   contents: write
-
 jobs:
   release:
     runs-on: ubuntu-latest
     environment:
       name: pypi
       url: https://pypi.org/p/mdb-fields-cleaner
-    permissions:
-      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
-
 
     if: github.event.pull_request.merged
     
