@@ -38,4 +38,10 @@ jobs:
     - name: Lint
       run: poetry run ruff .
     - name: Test
-      run: poetry run pytest
+      run: poetry run pytest --cov=.
+
+    - name: Upload coverage report to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        verbose: true
+        token: ${{ secrets.CODECOV_TOKEN }}

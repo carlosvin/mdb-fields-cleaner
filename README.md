@@ -1,5 +1,7 @@
 
-# MongoDB fields Cleaner (WIP)
+# MongoDB fields Cleaner
+
+[![PyPI Version](https://img.shields.io/pypi/v/mdb-fields-cleaner)](https://pypi.org/project/mdb-fields-cleaner/) [![codecov](https://codecov.io/gh/carlosvin/mdb-fields-cleaner/branch/main/graph/badge.svg?token=<your-codecov-token>)</a>](https://codecov.io/gh/carlosvin/mdb-fields-cleaner)
 
 It simplifies the process of cleaning up old deprecated fields in a MongoDB database.
 

@@ -8,6 +8,7 @@ class Cleaner:
     """
     Helper to easily remove any field from a collection
     """
+
     def __init__(self, db: MongoClient):
         """
         :db: [MongoClient](https://pymongo.readthedocs.io/en/stable/tutorial.html#making-a-connection-with-mongoclient)
