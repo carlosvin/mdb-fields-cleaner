@@ -39,6 +39,6 @@ def test_main(db, test_name):
         ]
     )
     results = cleaner.clean(collection.name, ["make", "model"])
-    assert results
+    assert results.modified_count == 2
     for doc in collection.find({}):
         assert expected_deleted.intersection(doc.keys()) == set()
