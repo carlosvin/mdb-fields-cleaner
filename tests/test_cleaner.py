@@ -1,4 +1,16 @@
+import pymongo
+import pytest
 from mdb_fields_cleaner import Cleaner
+
+
+@pytest.fixture
+def db():
+    return pymongo.MongoClient().get_database("test_db")
+
+
+@pytest.fixture
+def test_name(request) -> str:
+    return request.node.name
 
 
 def test_main(db, test_name):
