@@ -17,3 +17,4 @@ class DataClassCleaner(Cleaner):
             collection_name,
             keep_fields=[field.name for field in fields(class_or_instance)],
         )
+
