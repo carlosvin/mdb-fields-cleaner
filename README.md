@@ -23,6 +23,46 @@ results: UpdateResult = cleaner.clean(collection.name, ["make", "model"])
 print(f"{results.modified_count} modified documents")
 ```
 
+### Data models
+
+You can use following convenience cleaners to just remove any field in a collection that is not defined in the model.
+
+#### [dataclasses](https://docs.python.org/3/library/dataclasses.html)
+
+```python
+from pydantic import BaseModel
+from mdb_fields_cleaner.dataclass import DataClassCleaner
+from dataclasses import dataclass
+
+
+@dataclass
+class User:
+    id: int
+    name: str
+
+
+cleaner = DataClassCleaner(MongoClient())
+results: UpdateResult = cleaner.clean("users_collection", User)
+print(f"{results.modified_count} modified documents")
+```
+
+#### [Pydantic Models](https://docs.pydantic.dev/latest/concepts/models/)
+
+```python
+from pydantic import BaseModel
+from mdb_fields_cleaner.pydantic import PydanticCleaner
+
+
+class User(BaseModel):
+    id: int
+    name: str
+
+
+cleaner = PydanticCleaner(MongoClient())
+results: UpdateResult = cleaner.clean("users_collection", User)
+print(f"{results.modified_count} modified documents")
+```
+
 ## Development flow
 
 1. Create a branch and a pull request.
