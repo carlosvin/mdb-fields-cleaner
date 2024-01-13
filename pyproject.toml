@@ -7,7 +7,7 @@ readme = "README.md"
 repository = "https://github.com/carlosvin/mdb-fields-cleaner"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 pymongo = "^4.6.1"
 
 
