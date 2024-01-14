@@ -30,7 +30,9 @@ class UserDC:
         [PydanticCleaner, User(name="Carlos", age=41, email="carlos@test.com")],
     ),
 )
-def test_cleanup_data_model(cleaner_class: Type[ModelBasedCleaner], model, db, test_name):
+def test_cleanup_data_model(
+    cleaner_class: Type[ModelBasedCleaner], model, db, test_name
+):
     """validate that the data model is cleaned correctly"""
     expected_deleted = {"foo", "bar", "foo.bar"}
     collection = db.get_collection(f"{test_name}_users")
@@ -58,7 +60,9 @@ def test_cleanup_data_model(cleaner_class: Type[ModelBasedCleaner], model, db, t
         ]
     )
     cleaner = cleaner_class(db)
-    results = cleaner.clean_fields_not_in_model(collection_name=collection.name, class_or_instance=model)
+    results = cleaner.clean_fields_not_in_model(
+        collection_name=collection.name, class_or_instance=model
+    )
     assert results.modified_count == 2
     for doc in collection.find({}):
         assert expected_deleted.intersection(doc.keys()) == set()
