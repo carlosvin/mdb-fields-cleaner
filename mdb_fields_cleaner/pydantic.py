@@ -1,15 +1,15 @@
 from typing import Type
 from pydantic import BaseModel
 from pymongo.results import UpdateResult
-from mdb_fields_cleaner import Cleaner
+from mdb_fields_cleaner import Cleaner, ModelBasedCleaner
 
 
-class PydanticCleaner(Cleaner):
+class PydanticCleaner(ModelBasedCleaner, Cleaner):
     """
     Helper to easily remove any field that is not declared in the pydantic base model from a collection
     """
 
-    def clean(
+    def clean_fields_not_in_model(
         self, collection_name: str, class_or_instance: Type[BaseModel] | BaseModel
     ) -> UpdateResult:
         """
@@ -18,5 +18,5 @@ class PydanticCleaner(Cleaner):
         :cls: Pydantic BaseModel class with the fields that we want to keep in the collection
         """
         return super().clean(
-            collection_name, keep_fields=class_or_instance.model_fields.keys()
+            collection_name, keep_fields=[key for key in class_or_instance.model_fields]
         )
