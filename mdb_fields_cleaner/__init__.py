@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from typing import Sequence
-from pymongo import MongoClient
 from pymongo.collection import Collection
 from pymongo.results import UpdateResult
 from pymongo.database import Database
