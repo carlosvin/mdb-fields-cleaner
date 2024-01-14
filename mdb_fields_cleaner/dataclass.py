@@ -1,15 +1,17 @@
 from dataclasses import fields
-from mdb_fields_cleaner import Cleaner
+from mdb_fields_cleaner import Cleaner, ModelBasedCleaner
 from pymongo.results import UpdateResult
 
 
-class DataClassCleaner(Cleaner):
+class DataClassCleaner(ModelBasedCleaner, Cleaner):
     """
     Helper class to easily remove any field in a collection that is not a field
     in the data class
     """
 
-    def clean(self, collection_name: str, class_or_instance) -> UpdateResult:
+    def clean_fields_not_in_model(
+        self, collection_name: str, class_or_instance
+    ) -> UpdateResult:
         """
         Remove any field from a collection that is not a field in the data class
         """

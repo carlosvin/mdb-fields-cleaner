@@ -37,6 +37,8 @@ jobs:
     - run: poetry install
     - name: Lint
       run: poetry run ruff .
+    - name: Type checks
+      run: poetry run pyright .
     - name: Test
       run: |
         poetry run pytest --cov-report=xml
