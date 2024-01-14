@@ -42,7 +42,7 @@ class User:
 
 
 cleaner = DataClassCleaner(MongoClient())
-results: UpdateResult = cleaner.clean("users_collection", User)
+results: UpdateResult = cleaner.clean_fields_not_in_model("users_collection", User)
 print(f"{results.modified_count} modified documents")
 ```
 
@@ -59,7 +59,7 @@ class User(BaseModel):
 
 
 cleaner = PydanticCleaner(MongoClient())
-results: UpdateResult = cleaner.clean("users_collection", User)
+results: UpdateResult = cleaner.clean_fields_not_in_model("users_collection", User)
 print(f"{results.modified_count} modified documents")
 ```
 
